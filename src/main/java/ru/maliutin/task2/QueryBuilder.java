@@ -5,7 +5,13 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class QueryBuilder {
-
+    /**
+     * Формирование SQL запроса на помещение объекта в БД.
+     * @param obj объект для помещения в БД.
+     * @return SQL запрос в строковом представлении или null
+     * при отсутствии возможности сформировать запрос.
+     * @throws IllegalAccessException исключение при обращении к полям объекта.
+     */
     public String buildInsertQuery(Object obj) throws IllegalAccessException {
         Class<?> clazz = obj.getClass();
         StringBuilder query = new StringBuilder("INSERT INTO ");
@@ -55,6 +61,13 @@ public class QueryBuilder {
         }
     }
 
+    /**
+     * Формирование запроса на получение объекта.
+     * @param clazz тип объекта.
+     * @param primaryKey уникальный идентификатор объекта.
+     * @return SQL запрос в строковом представлении
+     * или null при отсутствии возможности сформировать запрос.
+     */
     public String buildSelectQuery(Class<?> clazz, UUID primaryKey) {
         StringBuilder query = new StringBuilder("SELECT * FROM ");
         if (clazz.isAnnotationPresent(Table.class)) {
@@ -81,6 +94,13 @@ public class QueryBuilder {
         }
     }
 
+    /**
+     * Формирование SQL запроса на обновление объекта.
+     * @param obj объект для обновления
+     * @return SQL запрос в строковом представлении
+     * или null при отсутствии возможности сформировать запрос.
+     * @throws IllegalAccessException исключение при обращении к полям объекта.
+     */
     public String buildUpdateQuery(Object obj) throws IllegalAccessException {
         Class<?> clazz = obj.getClass();
         StringBuilder query = new StringBuilder("UPDATE ");
@@ -129,9 +149,10 @@ public class QueryBuilder {
     }
 
     /**
-     * TODO: Доработать дополнительно в рамках домашней работы
-     *
-     * @return
+     * Формирование SQL запроса на удаление объекта.
+     * @param obj объект для удаления.
+     * @return SQL запрос в строковом представлении
+     * или null при отсутствии возможности сформировать запрос.
      */
     public String buildDeleteQuery(Object obj) {
         Class<?> clazz = obj.getClass();
@@ -151,7 +172,9 @@ public class QueryBuilder {
                                 .append("'");
                         field.setAccessible(false);
                     } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
+                        System.out.printf(
+                                "При получении данных из поля: %s, ошибка: %s\n",
+                                field.getName(), e.getMessage());
                     }
                 }
             });
